@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/noura-ai/static/css/main.d8db4157.css",
-    "main.js": "/noura-ai/static/js/main.37df4be0.js",
+    "main.js": "/noura-ai/static/js/main.ea8e1cbb.js",
     "static/js/977.b636eaab.chunk.js": "/noura-ai/static/js/977.b636eaab.chunk.js",
     "static/js/455.8962cd51.chunk.js": "/noura-ai/static/js/455.8962cd51.chunk.js",
     "index.html": "/noura-ai/index.html",
     "main.d8db4157.css.map": "/noura-ai/static/css/main.d8db4157.css.map",
-    "main.37df4be0.js.map": "/noura-ai/static/js/main.37df4be0.js.map",
+    "main.ea8e1cbb.js.map": "/noura-ai/static/js/main.ea8e1cbb.js.map",
     "977.b636eaab.chunk.js.map": "/noura-ai/static/js/977.b636eaab.chunk.js.map",
     "455.8962cd51.chunk.js.map": "/noura-ai/static/js/455.8962cd51.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d8db4157.css",
-    "static/js/main.37df4be0.js"
+    "static/js/main.ea8e1cbb.js"
   ]
 }
