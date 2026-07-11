@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Create React App uses webpack/react-scripts, so keep TypeScript resolution compatible. */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    
+    /* Allow JS files during migration */
+    "allowJs": true,
+
+    /* Keep this relaxed while the app is still a JS/TS migration. */
+    "strict": false,
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": "src"
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Noura AI Python Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Python Version</p>
+          <h1>Noura AI Assistant</h1>
+          <p class="hero-text">
+            A standalone Python copy of the Noura chatbot with the same core medical-help flow,
+            quick actions, upload/results guidance, and safe fallback behavior.
+          </p>
+          <div class="hero-pills">
+            <span class="hero-pill">Flask UI</span>
+            <span class="hero-pill">Medical Guidance</span>
+            <span class="hero-pill">React kept untouched</span>
+          </div>
+        </div>
+        <aside class="info-card">
+          <div class="info-row">
+            <span class="info-label">Mode</span>
+            <strong id="mode-badge">Loading...</strong>
+          </div>
+          <div class="info-row">
+            <span class="info-label">API</span>
+            <strong>/api/chat</strong>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Purpose</span>
+            <strong>Standalone Python chatbot</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="chat-shell">
+        <div class="chat-floating-button">💬</div>
+        <section class="chat-card">
+          <header class="chat-header">
+            <div class="assistant-meta">
+              <div class="assistant-avatar">AI</div>
+              <div>
+                <h2>Noura AI Assistant</h2>
+                <p id="assistant-status">Always here to help</p>
+              </div>
+            </div>
+            <span class="status-badge">Python</span>
+          </header>
+
+          <section id="messages" class="messages"></section>
+          <section class="quick-actions-wrap">
+            <div class="quick-actions-title">Quick Questions</div>
+            <section id="quick-actions" class="quick-actions"></section>
+          </section>
+
+          <form id="chat-form" class="chat-form">
+            <input id="chat-input" type="text" placeholder="Type your message..." autocomplete="off" />
+            <button id="send-button" type="submit">Send</button>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const state = {
+        messages: [
+          {
+            role: "bot",
+            content: "Hello! I'm Noura AI Medical Assistant. Ask me about cancer awareness, scans, results, or how to use the system."
+          }
+        ],
+        isTyping: false,
+        quickActions: []
+      };
+
+      const messagesEl = document.getElementById("messages");
+      const quickActionsEl = document.getElementById("quick-actions");
+      const formEl = document.getElementById("chat-form");
+      const inputEl = document.getElementById("chat-input");
+      const sendButtonEl = document.getElementById("send-button");
+      const modeBadgeEl = document.getElementById("mode-badge");
+      const assistantStatusEl = document.getElementById("assistant-status");
+
+      async function loadMeta() {
+        try {
+          const response = await fetch("/api/meta");
+          const data = await response.json();
+          state.quickActions = Array.isArray(data.quickActions) ? data.quickActions : [];
+          modeBadgeEl.textContent = data.mode === "live-ai" ? "Live AI" : "Demo Fallback";
+          assistantStatusEl.textContent =
+            data.mode === "live-ai" ? "Connected to AI provider" : "Running with smart fallback replies";
+        } catch (error) {
+          modeBadgeEl.textContent = "Offline";
+          assistantStatusEl.textContent = "Metadata unavailable";
+        } finally {
+          renderQuickActions();
+        }
+      }
+
+      function getChatErrorMessage(errorCode) {
+        if (errorCode === "AI_UNAUTHORIZED") {
+          return "إعدادات مزود الذكاء الاصطناعي غير صحيحة. راجع المفتاح وحاول مجددًا.";
+        }
+
+        if (errorCode === "AI_RATE_LIMIT") {
+          return "تم تجاوز حد الطلبات المؤقت. انتظر قليلًا ثم حاول مرة أخرى.";
+        }
+
+        if (errorCode === "AI_UPSTREAM_UNAVAILABLE" || errorCode === "AI_SERVER_UNAVAILABLE") {
+          return "خدمة الذكاء الاصطناعي غير متاحة الآن. حاول مرة أخرى لاحقًا.";
+        }
+
+        if (errorCode === "INVALID_MESSAGE") {
+          return "الرسالة غير صالحة. اكتب سؤالًا واضحًا ثم حاول مرة أخرى.";
+        }
+
+        return "حدث خطأ أثناء الاتصال بالمساعد الطبي. حاول مرة أخرى لاحقًا.";
+      }
+
+      function renderMessages() {
+        messagesEl.innerHTML = "";
+
+        state.messages.forEach(message => {
+          const row = document.createElement("div");
+          row.className = `message-row ${message.role === "user" ? "user" : "bot"}`;
+
+          const bubble = document.createElement("div");
+          bubble.className = `message-bubble ${message.role === "user" ? "user" : "bot"}`;
+          bubble.textContent = message.content;
+
+          row.appendChild(bubble);
+          messagesEl.appendChild(row);
+        });
+
+        if (state.isTyping) {
+          const row = document.createElement("div");
+          row.className = "message-row bot";
+
+          const bubble = document.createElement("div");
+          bubble.className = "message-bubble bot typing";
+          bubble.textContent = "Noura AI is typing...";
+
+          row.appendChild(bubble);
+          messagesEl.appendChild(row);
+        }
+
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      function renderQuickActions() {
+        quickActionsEl.innerHTML = "";
+        if (state.messages.length > 1) return;
+
+        state.quickActions.forEach(action => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "quick-action";
+          button.textContent = `${action.icon || ""} ${action.label}`.trim();
+          button.addEventListener("click", () => submitMessage(action.query));
+          quickActionsEl.appendChild(button);
+        });
+      }
+
+      async function submitMessage(text) {
+        const message = String(text || "").trim();
+        if (!message || state.isTyping) return;
+
+        state.messages.push({ role: "user", content: message });
+        state.isTyping = true;
+        inputEl.value = "";
+        inputEl.focus();
+        sendButtonEl.disabled = true;
+        renderMessages();
+        renderQuickActions();
+
+        try {
+          const history = state.messages.map(item => ({
+            role: item.role === "user" ? "user" : "assistant",
+            content: item.content
+          }));
+
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message, history })
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.code || "AI_REQUEST_FAILED");
+          }
+
+          state.messages.push({ role: "bot", content: data.reply || "No response received." });
+        } catch (error) {
+          state.messages.push({ role: "bot", content: getChatErrorMessage(error.message) });
+        } finally {
+          state.isTyping = false;
+          sendButtonEl.disabled = false;
+          renderMessages();
+        }
+      }
+
+      formEl.addEventListener("submit", event => {
+        event.preventDefault();
+        submitMessage(inputEl.value);
+      });
+
+      renderMessages();
+      loadMeta();
+    </script>
+  </body>
+</html>

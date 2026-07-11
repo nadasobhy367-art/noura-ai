@@ -1,0 +1,280 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Medical Color Palette */
+  --medical-blue: #0d6efd;
+  --medical-blue-light: #cfe2ff;
+  --health-green: #22c55e;
+  --health-green-light: #dcfce7;
+  --medical-red: #dc2626;
+  --medical-red-light: #fee2e2;
+  --ai-cyan: #22d3ee;
+  --ai-purple: #9333ea;
+
+  /* Legacy Variables */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f7ff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #cbd5e1;
+}
+
+.dark {
+  --medical-blue: #60a5fa;
+  --medical-blue-light: #1e3a8a;
+  --health-green: #4ade80;
+  --health-green-light: #15803d;
+  --medical-red: #f87171;
+  --medical-red-light: #7f1d1d;
+  --ai-cyan: #06b6d4;
+  --ai-purple: #c084fc;
+
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border-color: #334155;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir='rtl'] body {
+  font-family:
+    'Segoe UI',
+    'Tahoma',
+    'Arial',
+    'Noto Sans Arabic',
+    'Cairo',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir='rtl'] .language-toggle-anchor {
+  left: 1rem;
+  right: auto;
+}
+
+html[dir='rtl'] input,
+html[dir='rtl'] textarea,
+html[dir='rtl'] select {
+  text-align: right;
+}
+
+html[dir='rtl'] input[dir='ltr'],
+html[dir='rtl'] .font-mono {
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir='rtl'] table,
+html[dir='rtl'] th,
+html[dir='rtl'] td {
+  text-align: right;
+}
+
+html[dir='rtl'] .space-x-1 > :not([hidden]) ~ :not([hidden]),
+html[dir='rtl'] .space-x-2 > :not([hidden]) ~ :not([hidden]),
+html[dir='rtl'] .space-x-3 > :not([hidden]) ~ :not([hidden]),
+html[dir='rtl'] .space-x-4 > :not([hidden]) ~ :not([hidden]),
+html[dir='rtl'] .space-x-6 > :not([hidden]) ~ :not([hidden]),
+html[dir='rtl'] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+html[dir='rtl'] .mr-1 {
+  margin-right: 0;
+  margin-left: 0.25rem;
+}
+
+html[dir='rtl'] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+html[dir='rtl'] .mr-3 {
+  margin-right: 0;
+  margin-left: 0.75rem;
+}
+
+html[dir='rtl'] .mr-4 {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+html[dir='rtl'] .ml-1 {
+  margin-left: 0;
+  margin-right: 0.25rem;
+}
+
+html[dir='rtl'] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+html[dir='rtl'] .ml-3 {
+  margin-left: 0;
+  margin-right: 0.75rem;
+}
+
+html[dir='rtl'] .ml-4 {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+html[dir='rtl'] .flip-in-rtl {
+  transform: scaleX(-1);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Dark mode global styles */
+.dark body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+}
+
+.dark .text-gray-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #334155 !important;
+}
+
+.dark .border-gray-100 {
+  border-color: #334155 !important;
+}
+
+/* Medical Theme Utilities */
+.medical-gradient {
+  background: linear-gradient(135deg, var(--medical-blue) 0%, var(--ai-purple) 100%);
+}
+
+.health-gradient {
+  background: linear-gradient(135deg, var(--health-green) 0%, var(--ai-cyan) 100%);
+}
+
+.medical-text {
+  color: var(--medical-blue);
+}
+
+.health-text {
+  color: var(--health-green);
+}
+
+.medical-border {
+  border-color: var(--medical-blue);
+}
+
+.health-border {
+  border-color: var(--health-green);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(13, 110, 253, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(13, 110, 253, 0.3);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 110, 253, 0.5);
+}
+
+/* Selection Styling */
+::selection {
+  background: var(--medical-blue);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--medical-blue);
+  color: white;
+}
+
+/* Focus Visible */
+:focus-visible {
+  outline: 2px solid var(--medical-blue);
+  outline-offset: 2px;
+}
+
+/* Placeholder Styling */
+::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Link Styling */
+a {
+  color: var(--medical-blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--ai-purple);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}
